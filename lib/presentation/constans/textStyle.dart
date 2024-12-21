@@ -33,7 +33,7 @@ TextStyle loginFields = TextStyle(
   fontFamily: 'Avenir',
   fontWeight: FontWeight.w500,
   fontSize: 15,
-  color: selectColor,
+  color: secondColor,
 );
 
 TextStyle loginButton = TextStyle(
@@ -48,6 +48,13 @@ TextStyle homeFirst = TextStyle(
   fontWeight: FontWeight.w800,
   fontSize: 18,
   color: textColor,
+);
+
+TextStyle search = TextStyle(
+  fontFamily: 'Avenir',
+  fontWeight: FontWeight.w800,
+  fontSize: 14,
+  color: secondColor,
 );
 
 TextStyle homeCategory = TextStyle(
