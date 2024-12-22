@@ -6,12 +6,12 @@ class CategoryRemoteDataSource {
 
   CategoryRemoteDataSource(this.dio);
 
-  Future<List<categoryModel>> getCategories() async {
+  Future<List<CategoryModel>> getCategories() async {
     try {
       final response = await dio.get('https://darsoft.b-cdn.net/movies_categories.json');
       if (response.statusCode == 200) {
         final List categoriesJson = response.data['categories'];
-        return categoriesJson.map((json) => categoryModel.fromJson(json)).toList();
+        return categoriesJson.map((json) => CategoryModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load categories');
       }

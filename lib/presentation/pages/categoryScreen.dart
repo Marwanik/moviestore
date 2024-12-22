@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:shimmer/shimmer.dart'; // Import the shimmer package
 import 'package:moviestore/data/models/moviesModel.dart';
 import 'package:moviestore/presentation/pages/movieScreen.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
@@ -20,7 +21,7 @@ class MoviesListScreen extends StatefulWidget {
 class _MoviesListScreenState extends State<MoviesListScreen>
     with SingleTickerProviderStateMixin {
   final Dio _dio = Dio();
-  List<movieModel> _movies = [];
+  List<MovieModel> _movies = [];
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -52,7 +53,7 @@ class _MoviesListScreenState extends State<MoviesListScreen>
       setState(() {
         // Map JSON to movieModel and filter by category ID
         _movies = moviesJson
-            .map((json) => movieModel.fromJson(json))
+            .map((json) => MovieModel.fromJson(json))
             .where((movie) => movie.categoryId == widget.categoryId)
             .toList();
         _isLoading = false;
@@ -76,7 +77,7 @@ class _MoviesListScreenState extends State<MoviesListScreen>
     super.dispose();
   }
 
-  void _navigateToDetails(movieModel movie) {
+  void _navigateToDetails(MovieModel movie) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -146,11 +147,7 @@ class _MoviesListScreenState extends State<MoviesListScreen>
 
             Expanded(
               child: _isLoading
-                  ? Center(
-                child: CircularProgressIndicator(
-                  color: selectColor,
-                ),
-              )
+                  ? _buildShimmerLoading() // Replace CircularProgressIndicator with shimmer
                   : _errorMessage != null
                   ? Center(
                 child: Text(
@@ -196,8 +193,8 @@ class _MoviesListScreenState extends State<MoviesListScreen>
                               width: 90,
                               height: 96,
                               fit: BoxFit.cover,
-                              errorBuilder:
-                                  (context, error, stackTrace) {
+                              errorBuilder: (context, error,
+                                  stackTrace) {
                                 return const FlutterLogo(
                                   size: 80,
                                 );
@@ -258,6 +255,27 @@ class _MoviesListScreenState extends State<MoviesListScreen>
           ],
         ),
       ),
+    );
+  }
+
+  // Shimmer Loading Widget
+  Widget _buildShimmerLoading() {
+    return ListView.builder(
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: categoryColor,
+          highlightColor: textColor,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            height: 96,
+            decoration: BoxDecoration(
+              color: categoryColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        );
+      },
     );
   }
 }

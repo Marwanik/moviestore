@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviestore/presentation/blocs/watchlistBloc/watchlist_bloc.dart';
+import 'package:moviestore/presentation/blocs/watchlistBloc/watchlist_event.dart';
+import 'package:moviestore/presentation/blocs/watchlistBloc/watchlist_state.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:moviestore/data/models/moviesModel.dart';
+import 'package:moviestore/domain/entities/actor.dart';
+import 'package:moviestore/presentation/blocs/movieBloc/movie_bloc.dart';
+import 'package:moviestore/presentation/blocs/movieBloc/movie_event.dart';
+import 'package:moviestore/presentation/blocs/movieBloc/movie_state.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
 import 'package:moviestore/presentation/constans/icons.dart';
 import 'package:moviestore/presentation/constans/string.dart';
 import 'package:moviestore/presentation/constans/textStyle.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
-  final movieModel movie;
+  final MovieModel movie;
 
   MovieDetailsScreen({required this.movie});
 
@@ -17,7 +26,6 @@ class MovieDetailsScreen extends StatefulWidget {
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   late YoutubePlayerController _youtubeController;
-  bool _isInWatchlist = false;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -34,6 +42,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         mute: false,
       ),
     );
+
+    // Trigger loading actors via MoviesBloc
+    context.read<MoviesBloc>().add(LoadMoviesEvent(widget.movie.categoryId));
   }
 
   @override
@@ -41,12 +52,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     _youtubeController.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _toggleWatchlist() {
-    setState(() {
-      _isInWatchlist = !_isInWatchlist;
-    });
   }
 
   void _scrollLeft() {
@@ -150,28 +155,41 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Add to Watchlist Button
-                      if (!_isInWatchlist)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15),
-                          child: ElevatedButton(
-                            onPressed: _toggleWatchlist,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: selectColor,
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 20,
+                      // Add/Remove Watchlist Button
+                      BlocBuilder<WatchlistBloc, WatchlistState>(
+                        builder: (context, state) {
+                          bool isInWatchlist = false;
+
+                          if (state is WatchlistLoaded) {
+                            isInWatchlist = state.watchlist.any((movie) => movie.id == widget.movie.id);
+                          }
+
+                          // Show button only if the movie is not in the watchlist
+                          if (!isInWatchlist) {
+                            return ElevatedButton(
+                              onPressed: () {
+                                context.read<WatchlistBloc>().add(AddToWatchlist(widget.movie));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: selectColor,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 20,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(40),
+                              child: Text(
+                                ADDTOWATCHLIST,
+                                style: addWatchlist,
                               ),
-                            ),
-                            child: Text(
-                              ADDTOWATCHLIST,
-                              style: addWatchlist,
-                            ),
-                          ),
-                        ),
+                            );
+                          } else {
+                            return SizedBox(); // Return empty widget if already in watchlist
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -241,39 +259,21 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 Expanded(
                   child: SizedBox(
                     height: 120,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: widget.movie.actors.length,
-                      itemBuilder: (context, index) {
-                        final actor = widget.movie.actors[index];
-                        final actorImageUrl =
-                            'https://darsoft.b-cdn.net/assets/artists/${actor.id}.jpg';
-
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 20, top: 20),
-                          child: Column(
-                            children: [
-                              ClipOval(
-                                child: Image.network(
-                                  actorImageUrl,
-                                  width: 72,
-                                  height: 72,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const FlutterLogo(size: 60);
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                actor.name,
-                                style: movieActor,
-                                overflow: TextOverflow.fade,
-                              ),
-                            ],
-                          ),
-                        );
+                    child: BlocBuilder<MoviesBloc, MovieState>(
+                      builder: (context, state) {
+                        if (state is MoviesLoading) {
+                          return _buildShimmerActors();
+                        } else if (state is MoviesLoaded) {
+                          return _buildActorList(state.movies.first.actors);
+                        } else if (state is MoviesError) {
+                          return Center(
+                            child: Text(
+                              'Error loading actors',
+                              style: movieActor,
+                            ),
+                          );
+                        }
+                        return Container();
                       },
                     ),
                   ),
@@ -288,6 +288,80 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmerActors() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: 6,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 20, top: 20),
+          child: Column(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: ClipOval(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 5),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 50,
+                  height: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildActorList(List<Actor> actors) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: actors.length,
+      itemBuilder: (context, index) {
+        final actor = actors[index];
+        final actorImageUrl =
+            'https://darsoft.b-cdn.net/assets/artists/${actor.id}.jpg';
+
+        return Padding(
+          padding: const EdgeInsets.only(right: 20, top: 20),
+          child: Column(
+            children: [
+              ClipOval(
+                child: Image.network(
+                  actorImageUrl,
+                  width: 72,
+                  height: 72,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const FlutterLogo(size: 60);
+                  },
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                actor.name,
+                style: movieActor,
+                overflow: TextOverflow.fade,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

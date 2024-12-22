@@ -1,18 +1,18 @@
-import 'package:moviestore/data/models/moviesModel.dart';
+import 'actor.dart';
 
 class Movie {
   final int id;
   final int categoryId;
   final String title;
   final String summary;
-  final List<actorModel> actors;
+  final List<Actor> actors;
   final String director;
   final List<String> writers;
   final double rating;
   final String youtubeVideoId;
   final String year;
 
-  const Movie({
+  Movie({
     required this.id,
     required this.categoryId,
     required this.title,

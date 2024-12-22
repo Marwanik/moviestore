@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
 import 'package:moviestore/presentation/constans/string.dart';
 import 'package:moviestore/presentation/constans/textStyle.dart';
 import 'package:moviestore/presentation/pages/loginScreen.dart';
+import 'package:moviestore/presentation/pages/homeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -49,8 +51,6 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-
-
     _textSlideInAnimation = Tween<Offset>(begin: Offset(3, 0), end: Offset(0, 0)).animate(
       CurvedAnimation(
         parent: _controller,
@@ -70,33 +70,25 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Start splash animation and check authorization
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _checkLoginStatus();
-      }
-    });
+    _checkLoginStatus();
   }
 
   Future<void> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    if (mounted) {
+    // Navigate to the respective screen after animations
+    Future.delayed(Duration(seconds: 4), () {
       if (isLoggedIn) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => LoginScreen(), // Navigate to home screen
-          ),
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => LoginScreen(), // Navigate to login screen
-          ),
+          MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       }
-    }
+    });
   }
 
   @override
@@ -137,7 +129,6 @@ class _SplashScreenState extends State<SplashScreen>
                       );
                     },
                   ),
-
                   AnimatedBuilder(
                     animation: _textSlideInAnimation,
                     builder: (context, child) {
@@ -145,7 +136,10 @@ class _SplashScreenState extends State<SplashScreen>
                         position: _textSlideInAnimation,
                         child: Opacity(
                           opacity: _imageFadeInAnimation.value,
-                          child: Text(MOVIESSTORE,style: splash,)
+                          child: Text(
+                            MOVIESSTORE,
+                            style: splash,
+                          ),
                         ),
                       );
                     },

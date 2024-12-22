@@ -1,4 +1,6 @@
-class movieModel{
+import 'package:moviestore/data/models/actorModel.dart';
+
+class MovieModel{
   final int id;
   final int categoryId;
   final String title;
@@ -11,7 +13,7 @@ class movieModel{
   final String year;
 
 
-  movieModel({
+  MovieModel({
     required this.id,
     required this.categoryId,
     required this.title,
@@ -24,8 +26,8 @@ class movieModel{
     required this.year,
   });
 
-  factory movieModel.fromJson(Map<String, dynamic> json) {
-    return movieModel(
+  factory MovieModel.fromJson(Map<String, dynamic> json) {
+    return MovieModel(
       id: json['id'],
       categoryId: json['category_id'],
       title: json['title'],
@@ -57,27 +59,3 @@ class movieModel{
   }
 }
 
-class actorModel{
-  final int id;
-  final String name;
-
-  // Constructor
-  actorModel({
-    required this.id,
-    required this.name,
-  });
-
-  factory actorModel.fromJson(Map<String, dynamic> json) {
-    return actorModel(
-      id: json['id'],
-      name: json['name'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-    };
-  }
-}

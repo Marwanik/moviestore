@@ -12,6 +12,9 @@ const String SUMMARY = "Summary";
 const String CAST = "Cast";
 const String DIRECTOR = "Director:";
 const String WRITERS = "Writers: ";
+const String WATCHLIST = "Watchlist";
+const String REMOVEFROMWATCHLIST = "Remove Watchlist";
+
 
 
 
