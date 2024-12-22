@@ -80,7 +80,7 @@ TextStyle movieName = TextStyle(
 
 TextStyle movieYear = TextStyle(
   fontFamily: 'Avenir',
-  fontWeight: FontWeight.w800,
+  fontWeight: FontWeight.w500,
   fontSize: 15,
   color: textColor,
 );
@@ -146,4 +146,25 @@ TextStyle addWatchlist = TextStyle(
   fontWeight: FontWeight.w700,
   fontSize: 18,
   color: textColor, // Default color
+);
+
+TextStyle movieName1 = TextStyle(
+  fontFamily: 'Avenir',
+  fontWeight: FontWeight.w800,
+  fontSize: 20,
+  color: textColor,
+);
+
+TextStyle movieYear1 = TextStyle(
+  fontFamily: 'Avenir',
+  fontWeight: FontWeight.w500,
+  fontSize: 20,
+  color: textColor,
+);
+
+TextStyle movieRate1 = TextStyle(
+  fontFamily: 'Avenir',
+  fontWeight: FontWeight.w800,
+  fontSize: 15,
+  color: textColor,
 );

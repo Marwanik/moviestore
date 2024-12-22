@@ -6,6 +6,9 @@ import 'package:moviestore/presentation/constans/colors.dart';
 import 'package:moviestore/presentation/constans/icons.dart';
 import 'package:moviestore/presentation/constans/string.dart';
 import 'package:moviestore/presentation/constans/textStyle.dart';
+import 'package:moviestore/presentation/pages/categoryScreen.dart';
+import 'package:moviestore/presentation/pages/profileScreen.dart';
+import 'package:moviestore/presentation/pages/watchlistScreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -77,7 +80,6 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: BELL,
             onPressed: () {
-              // Add notification functionality here
             },
           ),
         ],
@@ -148,11 +150,16 @@ class _HomePageState extends State<HomePage> {
                       final category = _categories[index];
                       return GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(
+                          Navigator.push(
                             context,
-                            '/movie-list',
-                            arguments: category.id,
+                            MaterialPageRoute(
+                              builder: (context) => MoviesListScreen(
+                                categoryId: category.id, // Pass category ID
+                                categoryTitle: category.title, // Pass category title
+                              ),
+                            ),
                           );
+
                         },
                         child: Container(
                           height: 120,
@@ -176,19 +183,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           // WatchList Screen
-          Center(
-            child: Text(
-              "Watchlist Screen",
-              style: homeFirst,
-            ),
-          ),
-          // Profile Screen
-          Center(
-            child: Text(
-              "Profile Screen",
-              style: homeFirst,
-            ),
-          ),
+          WatchListScreen(watchlist: [],),
+
+          ProfileScreen(username: "Marwan"),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

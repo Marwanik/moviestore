@@ -44,8 +44,8 @@ const SEARCHICON = Image(
 
 const SMALLRATE = Image(
   image: AssetImage('assets/images/stars.png'),
-  width: 24,
-  height: 24,
+  width: 12,
+  height: 15,
 );
 
 const UNSELECTEDUSER = Image(

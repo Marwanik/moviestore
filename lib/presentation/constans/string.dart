@@ -10,6 +10,8 @@ const String TRENDINGCATEGORY = "Trending Categories";
 const String ADDTOWATCHLIST = "Add to Watchlist";
 const String SUMMARY = "Summary";
 const String CAST = "Cast";
+const String DIRECTOR = "Director:";
+const String WRITERS = "Writers: ";
 
 
 
