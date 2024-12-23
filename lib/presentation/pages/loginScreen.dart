@@ -11,6 +11,8 @@ import 'package:moviestore/presentation/pages/homeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -22,7 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isPasswordHidden = true;
 
-  // Regex for validation
   final RegExp _emailRegex = RegExp(r'^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]+');
   final RegExp _passwordRegex = RegExp(r'^(?=.*[!@#\$&*~]).{8,}$');
 
@@ -35,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _printEmailFromPrefs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email') ?? 'No email saved';
-    print('Saved Email: $email');
   }
 
   @override
@@ -45,27 +45,25 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: const Color(0xFF1A1B2F),
         body: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 60),
+                const SizedBox(height: 60),
                 Text(WELCOME, style: loginFirst),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(LOGINTOCONTINUE, style: loginSecond),
-                SizedBox(height: 40),
-                Center(child: LOGINICON),
-                SizedBox(height: 60),
+                const SizedBox(height: 40),
+                const Center(child: LOGINICON),
+                const SizedBox(height: 60),
                 BlocConsumer<LoginBloc, LoginState>(
                   listener: (context, state) async {
                     if (state is LoginSuccess) {
-                      // Save email to SharedPreferences and print it
                       await _saveLoginDetails(_emailController.text);
                       await _printEmailFromPrefs();
 
-                      // Navigate to HomeScreen after successful login
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -77,7 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SnackBar(content: Text('Login Successful!')),
                       );
                     } else if (state is LoginFailure) {
-                      // Show an error message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(state.error)),
                       );
@@ -101,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           CustomTextField(
                             hintText: ENTERYOURPASSWORD,
                             controller: _passwordController,
@@ -125,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -133,15 +130,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(FORGETPASSWORD, style: loginFields),
                             ),
                           ),
-                          SizedBox(height: 40),
-                          // Show loading spinner or login button
+                          const SizedBox(height: 25),
                           state is LoginLoading
                               ? CircularProgressIndicator(color: selectColor)
                               : CustomButton(
                             text: LOGIN,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // Trigger Bloc event for login
                                 context.read<LoginBloc>().add(
                                   LoginSubmitted(
                                     email: _emailController.text,

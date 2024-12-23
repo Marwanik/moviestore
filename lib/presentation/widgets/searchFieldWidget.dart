@@ -11,7 +11,7 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return // Search Bar
+    return
       Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -22,7 +22,7 @@ class SearchField extends StatelessWidget {
         child: TextField(
           style: search,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.all(20.0),
+            contentPadding: const EdgeInsets.all(20.0),
             suffixIcon: SEARCHICON,
             hintText: SEARCH,
             hintStyle: search,

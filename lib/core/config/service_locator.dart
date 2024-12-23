@@ -59,36 +59,28 @@ class WatchlistSession {
   }
 }
 
-// Initialize all dependencies
+
 Future<void> init() async {
-  // SharedPreferences
   SharedPreferences prefs = await SharedPreferences.getInstance();
   core.registerSingleton<SharedPreferences>(prefs);
 
-  // Register UserSession
   core.registerSingleton<UserSession>(UserSession(prefs));
 
-  // Register WatchlistSession
   core.registerSingleton<WatchlistSession>(WatchlistSession(prefs));
 
-  // Dio for HTTP requests
   core.registerLazySingleton(() => Dio());
 
-  // Register Movie Remote Data Source
   core.registerLazySingleton<MovieRemoteDataSource>(
           () => MovieRemoteDataSource(core()));
 
-  // Register Movie Repository
   core.registerLazySingleton<MovieRepository>(
           () => MovieRepositoryImpl(remoteDataSource: core()));
 
-  // Register Use Cases
   core.registerLazySingleton(() => GetMoviesUseCase(core()));
 }
 
-// Clear all SharedPreferences data
 Future<void> clearSharedPreferences() async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.clear();
-  GetIt.I.reset(); // Clear all registered GetIt instances
+  GetIt.I.reset();
 }

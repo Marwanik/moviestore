@@ -8,19 +8,23 @@ import 'package:moviestore/presentation/blocs/profileBloc/profile_bloc.dart';
 import 'package:moviestore/presentation/pages/loginScreen.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProfileBloc()..add(LoadUserProfile()),
-      child: ProfileView(),
+      child: const ProfileView(),
     );
   }
 }
 
 class ProfileView extends StatelessWidget {
-  void _logout(BuildContext context) {
-    context.read<ProfileBloc>().add(LogoutUser());
-  }
+  const ProfileView({super.key});
+
+  // void _logout(BuildContext context) {
+  //   context.read<ProfileBloc>().add(LogoutUser());
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +36,9 @@ class ProfileView extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginScreen(),
+                builder: (context) => const LoginScreen(),
               ),
-            ); // Redirect to LoginScreen
+            );
           } else if (state is ProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),
@@ -43,24 +47,21 @@ class ProfileView extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is ProfileLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is ProfileLoaded) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Flutter Logo Image
                   const FlutterLogo(size: 120),
                   const SizedBox(height: 20),
 
-                  // Username
                   Text(
                     state.email,
                     style: movieName1,
                   ),
                   const SizedBox(height: 40),
 
-                  // Logout Button
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -89,7 +90,7 @@ class ProfileView extends StatelessWidget {
             return Center(
               child: Text(
                 state.error,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
             );
           } else {

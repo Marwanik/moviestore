@@ -18,7 +18,7 @@ import 'package:moviestore/presentation/constans/textStyle.dart';
 class MovieDetailsScreen extends StatefulWidget {
   final MovieModel movie;
 
-  MovieDetailsScreen({required this.movie});
+  const MovieDetailsScreen({super.key, required this.movie});
 
   @override
   _MovieDetailsScreenState createState() => _MovieDetailsScreenState();
@@ -32,10 +32,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   void initState() {
     super.initState();
 
-    // Initialize YouTube Player Controller
     _youtubeController = YoutubePlayerController(
       initialVideoId: widget.movie.youtubeVideoId,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         loop: true,
         hideControls: true,
         autoPlay: true,
@@ -43,7 +42,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       ),
     );
 
-    // Trigger loading actors via MoviesBloc
     context.read<MoviesBloc>().add(LoadMoviesEvent(widget.movie.categoryId));
   }
 
@@ -95,7 +93,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // YouTube Player Section
             AspectRatio(
               aspectRatio: 16 / 9,
               child: ClipRRect(
@@ -109,11 +106,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             ),
             const SizedBox(height: 30),
 
-            // Movie Details Section
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Movie Poster
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
@@ -128,7 +123,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                 ),
                 const SizedBox(width: 30),
 
-                // Movie Info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,7 +149,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Add/Remove Watchlist Button
                       BlocBuilder<WatchlistBloc, WatchlistState>(
                         builder: (context, state) {
                           bool isInWatchlist = false;
@@ -164,7 +157,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                             isInWatchlist = state.watchlist.any((movie) => movie.id == widget.movie.id);
                           }
 
-                          // Show button only if the movie is not in the watchlist
                           if (!isInWatchlist) {
                             return ElevatedButton(
                               onPressed: () {
@@ -186,7 +178,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                               ),
                             );
                           } else {
-                            return SizedBox(); // Return empty widget if already in watchlist
+                            return const SizedBox();
                           }
                         },
                       ),
@@ -197,7 +189,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Summary Section
             Text(
               SUMMARY,
               style: movieTitle,
@@ -209,7 +200,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Director and Writers Section
             RichText(
               text: TextSpan(
                 style: moviedis,
@@ -243,7 +233,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Cast Section
             Text(
               CAST,
               style: movieTitle,
@@ -251,7 +240,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             const SizedBox(height: 10),
             Row(
               children: [
-                // Left Arrow
                 IconButton(
                   onPressed: _scrollLeft,
                   icon: Icon(Icons.arrow_back_ios, color: selectColor),
@@ -278,7 +266,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                     ),
                   ),
                 ),
-                // Right Arrow
                 IconButton(
                   onPressed: _scrollRight,
                   icon: Icon(Icons.arrow_forward_ios, color: selectColor),

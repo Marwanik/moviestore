@@ -22,11 +22,11 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
 
   void _onAddToWatchlist(AddToWatchlist event, Emitter<WatchlistState> emit) async {
     await _watchlistSession.addToWatchlist(event.movie.toJson());
-    add(LoadWatchlist()); // Reload the watchlist
+    add(LoadWatchlist());
   }
 
   void _onRemoveFromWatchlist(RemoveFromWatchlist event, Emitter<WatchlistState> emit) async {
     await _watchlistSession.removeFromWatchlist(event.movie.id);
-    add(LoadWatchlist()); // Reload the watchlist
+    add(LoadWatchlist());
   }
 }

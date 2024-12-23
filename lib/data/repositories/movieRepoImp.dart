@@ -34,7 +34,6 @@ class MovieRepositoryImpl implements MovieRepository {
 
   @override
   Future<List<Category>> getCategories() {
-    // Throw an unimplemented error if you don't need this method.
     throw UnimplementedError("getCategories is not implemented in MovieRepositoryImpl.");
   }
 }

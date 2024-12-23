@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:shimmer/shimmer.dart'; // Import the shimmer package
+import 'package:shimmer/shimmer.dart';
 import 'package:moviestore/data/models/moviesModel.dart';
 import 'package:moviestore/presentation/pages/movieScreen.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
@@ -12,7 +12,7 @@ class MoviesListScreen extends StatefulWidget {
   final int categoryId;
   final String categoryTitle;
 
-  MoviesListScreen({required this.categoryId, required this.categoryTitle});
+  const MoviesListScreen({super.key, required this.categoryId, required this.categoryTitle});
 
   @override
   _MoviesListScreenState createState() => _MoviesListScreenState();
@@ -51,14 +51,12 @@ class _MoviesListScreenState extends State<MoviesListScreen>
       final List<dynamic> moviesJson = response.data['movies'];
 
       setState(() {
-        // Map JSON to movieModel and filter by category ID
         _movies = moviesJson
             .map((json) => MovieModel.fromJson(json))
             .where((movie) => movie.categoryId == widget.categoryId)
             .toList();
         _isLoading = false;
 
-        // If no movies, trigger animation
         if (_movies.isEmpty) {
           _animationController.forward();
         }
@@ -117,7 +115,6 @@ class _MoviesListScreenState extends State<MoviesListScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Bar
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
@@ -128,7 +125,7 @@ class _MoviesListScreenState extends State<MoviesListScreen>
               child: TextField(
                 style: search,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(20.0),
+                  contentPadding: const EdgeInsets.all(20.0),
                   suffixIcon: SEARCHICON,
                   hintText: SEARCH,
                   hintStyle: search,
@@ -138,7 +135,6 @@ class _MoviesListScreenState extends State<MoviesListScreen>
             ),
             const SizedBox(height: 40),
 
-            // Section Title
             Text(
               widget.categoryTitle,
               style: categoryFirst,
@@ -147,7 +143,7 @@ class _MoviesListScreenState extends State<MoviesListScreen>
 
             Expanded(
               child: _isLoading
-                  ? _buildShimmerLoading() // Replace CircularProgressIndicator with shimmer
+                  ? _buildShimmerLoading()
                   : _errorMessage != null
                   ? Center(
                 child: Text(
@@ -185,7 +181,6 @@ class _MoviesListScreenState extends State<MoviesListScreen>
                       onTap: () => _navigateToDetails(movie),
                       child: Row(
                         children: [
-                          // Movie Image
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
@@ -203,7 +198,6 @@ class _MoviesListScreenState extends State<MoviesListScreen>
                           ),
                           const SizedBox(width: 5),
 
-                          // Movie Details
                           Expanded(
                             child: Container(
                               width: 225,
@@ -258,7 +252,6 @@ class _MoviesListScreenState extends State<MoviesListScreen>
     );
   }
 
-  // Shimmer Loading Widget
   Widget _buildShimmerLoading() {
     return ListView.builder(
       itemCount: 6,

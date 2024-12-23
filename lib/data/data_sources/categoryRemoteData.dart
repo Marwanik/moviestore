@@ -17,10 +17,8 @@ class CategoryRemoteDataSource {
       }
     } on DioError catch (dioError) {
       if (dioError.response != null) {
-        // Server responded but with an error code
         throw Exception('DioError: ${dioError.response?.statusCode} - ${dioError.response?.data}');
       } else {
-        // Something happened in setting up or sending the request
         throw Exception('DioError: ${dioError.message}');
       }
     } catch (e) {

@@ -30,7 +30,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       final SharedPreferences prefs = GetIt.instance<SharedPreferences>();
       await prefs.clear();
-      GetIt.I.reset(); // Clear all registered services
+      GetIt.I.reset();
       emit(ProfileLoggedOut());
     } catch (e) {
       emit(ProfileError(error: e.toString()));

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
 import 'package:moviestore/presentation/constans/string.dart';
 import 'package:moviestore/presentation/constans/textStyle.dart';
@@ -8,6 +7,8 @@ import 'package:moviestore/presentation/pages/homeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -33,28 +34,28 @@ class _SplashScreenState extends State<SplashScreen>
     _circleScaleUpAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.0, 0.4, curve: Curves.easeOut),
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
       ),
     );
 
     _circleScaleDownAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.4, 0.6, curve: Curves.easeIn),
+        curve: const Interval(0.4, 0.6, curve: Curves.easeIn),
       ),
     );
 
     _imageFadeInAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.4, 0.6, curve: Curves.easeIn),
+        curve: const Interval(0.4, 0.6, curve: Curves.easeIn),
       ),
     );
 
-    _textSlideInAnimation = Tween<Offset>(begin: Offset(3, 0), end: Offset(0, 0)).animate(
+    _textSlideInAnimation = Tween<Offset>(begin: const Offset(3, 0), end: const Offset(0, 0)).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.8, 1.0, curve: Curves.easeInOut),
+        curve: const Interval(0.8, 1.0, curve: Curves.easeInOut),
       ),
     );
 
@@ -64,7 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.5, 1.0, curve: Curves.easeInOut),
+        curve: const Interval(0.5, 1.0, curve: Curves.easeInOut),
       ),
     );
 
@@ -77,15 +78,14 @@ class _SplashScreenState extends State<SplashScreen>
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-    // Navigate to the respective screen after animations
-    Future.delayed(Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 4), () {
       if (isLoggedIn) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
       }
     });
@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Container(
                           width: 100,
                           height: 100,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.black,
                             shape: BoxShape.circle,
                           ),

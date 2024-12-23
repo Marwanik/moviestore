@@ -23,7 +23,6 @@ class actorModel {
     };
   }
 
-  // Define the toEntity method
   Actor toEntity() {
     return Actor(
       id: id,

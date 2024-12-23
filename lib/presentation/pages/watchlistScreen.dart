@@ -11,13 +11,15 @@ import 'package:moviestore/presentation/blocs/watchlistBloc/watchlist_event.dart
 import 'package:moviestore/presentation/blocs/watchlistBloc/watchlist_state.dart';
 
 class WatchListScreen extends StatelessWidget {
+  const WatchListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainColor,
       body: BlocProvider(
         create: (context) => WatchlistBloc()..add(LoadWatchlist()),
-        child: WatchlistView(),
+        child: const WatchlistView(),
       ),
     );
   }
@@ -25,6 +27,8 @@ class WatchListScreen extends StatelessWidget {
 
 
 class WatchlistView extends StatelessWidget {
+  const WatchlistView({super.key});
+
   void _navigateToDetails(BuildContext context, MovieModel movie) {
     Navigator.push(
       context,
@@ -45,7 +49,6 @@ class WatchlistView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search Bar
           Container(
             decoration: BoxDecoration(
               border: Border.all(
@@ -56,7 +59,7 @@ class WatchlistView extends StatelessWidget {
             child: TextField(
               style: search,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(20.0),
+                contentPadding: const EdgeInsets.all(20.0),
                 suffixIcon: SEARCHICON,
                 hintText: SEARCH,
                 hintStyle: search,
@@ -66,19 +69,17 @@ class WatchlistView extends StatelessWidget {
           ),
           const SizedBox(height: 40),
 
-          // Watchlist Section Title
           Text(
             WATCHLIST,
             style: categoryFirst,
           ),
           const SizedBox(height: 30),
 
-          // Watchlist Content
           Expanded(
             child: BlocBuilder<WatchlistBloc, WatchlistState>(
               builder: (context, state) {
                 if (state is WatchlistLoading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is WatchlistLoaded) {
@@ -115,7 +116,6 @@ class WatchlistView extends StatelessWidget {
                             onTap: () => _navigateToDetails(context, movie),
                             child: Row(
                               children: [
-                                // Movie Image
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
@@ -131,7 +131,6 @@ class WatchlistView extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 5),
 
-                                // Movie Details
                                 Expanded(
                                   child: Container(
                                     width: 225,
@@ -184,7 +183,7 @@ class WatchlistView extends StatelessWidget {
                     child: Text('Error: ${state.error}'),
                   );
                 } else {
-                  return SizedBox();
+                  return const SizedBox();
                 }
               },
             ),

@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:moviestore/presentation/blocs/homeBloc/home_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:moviestore/data/data_sources/categoryRemoteData.dart';
-import 'package:moviestore/data/models/categoriesModel.dart';
 import 'package:moviestore/presentation/constans/colors.dart';
 import 'package:moviestore/presentation/constans/icons.dart';
 import 'package:moviestore/presentation/constans/string.dart';
@@ -14,6 +13,8 @@ import 'package:moviestore/presentation/pages/profileScreen.dart';
 import 'package:moviestore/presentation/pages/watchlistScreen.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSpacing: 16.0,
         childAspectRatio: 3 / 2,
       ),
-      itemCount: 10, // Show shimmer effect for 10 items
+      itemCount: 10,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: cardColor,
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (context) => HomeBloc(
         categoryRemoteDataSource: CategoryRemoteDataSource(Dio()),
-      )..add(LoadCategoriesEvent()), // Fetch categories when HomeBloc is created
+      )..add(LoadCategoriesEvent()),
       child: Scaffold(
         backgroundColor: mainColor,
         appBar: AppBar(
@@ -97,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
             });
           },
           children: [
-            // Home Screen
             BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 if (state is CategoriesLoading) {
@@ -111,7 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Search Bar
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
@@ -122,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: TextField(
                             style: search,
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(20.0),
+                              contentPadding: const EdgeInsets.all(20.0),
                               suffixIcon: SEARCHICON,
                               hintText: SEARCH,
                               hintStyle: search,
@@ -189,16 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 } else {
-                  return SizedBox.shrink();
+                  return const SizedBox.shrink();
                 }
               },
             ),
 
-            // WatchList Screen
-            WatchListScreen(),
+            const WatchListScreen(),
 
-            // Profile Screen
-            ProfileScreen(),
+            const ProfileScreen(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

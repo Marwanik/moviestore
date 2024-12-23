@@ -15,10 +15,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginSubmitted>((event, emit) async {
       emit(LoginLoading());
       try {
-        // Simulate network delay
         await Future.delayed(Duration(seconds: 2));
 
-        // Save email to SharedPreferences
         await _prefs.setString('userEmail', event.email);
         await _prefs.setBool('isLoggedIn', true);
 
